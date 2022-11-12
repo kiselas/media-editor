@@ -1,0 +1,77 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15.0-alpine
+    container_name: postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - 54321:5432
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - 5050:80
+    environment:
+      PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+
+  redis:
+    image: redis:alpine
+    container_name : redis
+    expose:
+      - 6379
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+#    command: gunicorn django_video_converter.wsgi:application --bind 0.0.0.0:8000 --log-level info --capture-output
+    volumes:
+      - .:/code
+      - static_volume:/code/static
+      - media_volume:/code/media
+    expose:
+      - 8000
+    depends_on:
+      - db
+      - redis
+    environment:
+      - REDIS_HOST=redis
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/code/static
+      - media_volume:/code/media
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+  celery:
+    restart: always
+    build: .
+    command: celery -A django_celery worker -l info
+    volumes:
+      - .:/code
+      - static_volume:/code/static
+      - media_volume:/code/media
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASSWORD}
+    depends_on:
+      - db
+      - redis
+      - web
+volumes:
+    postgres_data:
+    static_volume:
+    media_volume:
