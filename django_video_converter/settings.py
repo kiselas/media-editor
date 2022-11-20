@@ -17,8 +17,8 @@ import os
 env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path('/code')
 environ.Env.read_env(BASE_DIR / '.env')
 
 
@@ -38,6 +38,7 @@ ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'daphne',
+    'channels',
 
     'compressor.apps.CompressorConfig',
     'converter.apps.ConverterConfig',
@@ -84,6 +85,14 @@ TEMPLATES = [
 ASGI_APPLICATION = "django_video_converter.asgi.application"
 WSGI_APPLICATION = 'django_video_converter.wsgi.application'
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -161,7 +170,7 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'INFO',
+        'level': 'DEBUG',
     },
 }
 REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')

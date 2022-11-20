@@ -12,3 +12,4 @@ celery==5.2.*
 django-celery-beat==2.4.*
 channels==4.0.*
 daphne==4.0.*
+channels_redis==4.0.*

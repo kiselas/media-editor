@@ -15,8 +15,45 @@
             <div class="row">
                 <div class="col-12">
                     <div class="intro">
-                        <h6>Ожидайте..</h6>
-                        <h1>Видео обрабатывается. Загрузка начнётся автоматически.</h1>
+                        <h6 class="waiting-text">Ожидайте..</h6>
+                        <h1 id="video-link">Видео обрабатывается. Загрузка начнётся автоматически.</h1>
+                            {{ video_id|json_script:"video_id" }}
+                        <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                        <script>
+                            const roomName = JSON.parse(document.getElementById('video_id').textContent);
+
+                            const notificationsSocket = new WebSocket(
+                                'ws://'
+                                + window.location.host
+                                + '/ws/compressor/'
+                                + roomName
+                                + '/'
+                            );
+
+                            notificationsSocket.onmessage = function(e) {
+                                const data = JSON.parse(e.data);
+                                if (data.msg_type === 'send_ready_message') {
+                                    console.log(data.msg_type + '\n');
+                                    console.log(data.data.message + '\n');
+                                    console.log(data.data.path_to_file + '\n');
+                                    console.log('We got' + '\n');
+                                    let path_to_file = data.data.path_to_file
+                                    let spinner = document.getElementsByClassName('lds-roller')[0]
+                                    let waiting_text = document.getElementsByClassName('waiting-textr')[0]
+                                    let video_link = document.getElementById('video-link')
+                                    video_link.innerHTML = `<a class="video-link" href="${path_to_file}">Нажмите для загрузки</a>`
+                                    spinner.remove()
+                                    waiting_text.remove()
+                                    let video_ready_id = document.getElementById('video_id').textContent
+                                }
+                                localStorage.setItem(video_ready_id, true);
+                                localStorage.getItem("lastname");
+                            };
+
+                            notificationsSocket.onclose = function(e) {
+                                console.error('Chat socket closed unexpectedly');
+                            };
+                        </script>
                     </div>
                 </div>
             </div>
