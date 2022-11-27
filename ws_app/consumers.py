@@ -5,6 +5,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 from channels.layers import get_channel_layer
 
+from compressor.constants import FileStatus
 from ws_app.utils import send_to_socket_group
 
 logger = logging.getLogger(__name__)
@@ -38,11 +39,24 @@ class NotificationsConsumer(JsonWebsocketConsumer):
         message = text_data_json["message"]
         logger.info('In recieve')
         # Send message to room group
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_video_id, {"type": "send_ready_message", "message": message}
-        )
+        # async_to_sync(self.channel_layer.group_send)(
+        #     self.room_video_id, {"type": "send_ready_message", "message": message}
+        # )
 
     def send_ready_message(self, event):
+        """
+        Called when someone has messaged our chat.
+        """
+        # Send a message down to the client
+        self.send_json(
+            {
+                "msg_type": event['type'],
+                "data": event['data'],
+            },
+        )
+        logger.info('Haaaaaaaaaaaaaaaaaaaaaaaaaa')
+
+    def send_error_message(self, event):
         """
         Called when someone has messaged our chat.
         """
@@ -62,6 +76,17 @@ def send_video_ready_msg(group_name, path_to_file):
     data = {
         'message': message,
         'path_to_file': path_to_file,
+        'file_status': FileStatus.READY
+    }
+    send_to_socket_group(group_name, msg_type, data)
+
+
+def send_error_msg(group_name, path_to_file):
+    message = 'Error'
+    msg_type = 'send_error_message'
+    data = {
+        'message': message,
+        'file_status': FileStatus.ERROR
     }
     send_to_socket_group(group_name, msg_type, data)
 

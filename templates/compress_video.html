@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%  block content %}
+    <!-- SLIDER -->
+
+
+    <!-- ABOUT -->
+
+
+    <!-- MILESTONE -->
+
+    <section id="services" class="text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="intro">
+                        <h1>Сжатие видео</h1>
+                        <p class="mx-auto">Загрузите видео размером до 200 мегабайт</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4">
+                <form action="" enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <div>
+                        {{ form }}
+                        <div id="ratio_hint"></div>
+                    </div>
+                    <input type="submit" value="Начать сжатие видео" class="btn btn-brand ms-lg-3">
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio -->
+
+    <!-- Team -->
+
+    <!-- Reviews -->
+
+    <!-- blog -->
+    <script>
+        function get_compress_ratio_hint(val) {
+            if (val === '0') {
+                return `Размер видео уменьшится примерно на <b>20%</b></br>Минимальная потеря качества видео</br>`;
+            }
+            else if (val === '1') {
+                return `Размер видео уменьшится примерно на <b>40%</b></br>Оптимальное сочитание сжатия к потере качества видео</br>`;
+            }
+            else if (val === '2') {
+                return `Размер видео уменьшится примерно <b>70%</b></br>Заметная потеря качества и сильное сжатие видео</br>`;
+            }
+            else if (val === '3') {
+                let hint = `Размер видео уменьшится примерно <b>80%</b>
+                </br>Очень сильная потеря качества. Этот параметр рекомендуется использовать,
+                </br>если с предыдущими не произошло ощутимое изменение размера видео</br>`;
+                return hint
+            }
+            else if (val === '4') {
+                let hint = `Размер видео уменьшится примерно <b>85%</b>
+                </br>Очень сильная потеря качества. Этот параметр рекомендуется использовать,
+                </br>если с предыдущими не произошло ощутимое изменение размера видео</br>`;
+                return hint
+            }
+            else if (val === '5') {
+                let hint = `Размер видео уменьшится примерно <b>88%</b>
+                </br>Очень сильная потеря качества. Этот параметр рекомендуется использовать,
+                </br>если с предыдущими не произошло ощутимое изменение размера видео</br>`;
+                return hint
+            }
+
+        }
+
+        let compression_ratio_slider = document.getElementById("id_compression_ratio")
+        function changeRatioHintText() {
+           let ratio_value = compression_ratio_slider.value //gets the oninput value
+
+            let hint = get_compress_ratio_hint(ratio_value);
+           console.log(hint)
+           document.getElementById('ratio_hint').innerHTML = hint; //displays this value to the html page
+        }
+
+        compression_ratio_slider.addEventListener('input', changeRatioHintText);
+        changeRatioHintText();
+
+    </script>
+
+{%  endblock content %}
+
+

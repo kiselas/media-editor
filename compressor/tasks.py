@@ -1,11 +1,14 @@
 import logging
 
 import ffmpy
+import time
 from django.conf import settings
+from django.core.cache import cache
 
-from compressor.utils import get_crf_for_compression
+from compressor.constants import PATH_TO_COMPRESSED_VIDEO, FileStatus
+from compressor.utils import get_crf_for_compression, mark_ready
 from django_celery.celery import app
-from ws_app.consumers import send_video_ready_msg, get_channel_video_group_name
+from ws_app.consumers import send_video_ready_msg, get_channel_video_group_name, send_error_msg
 
 
 class InvalidCRFSize(Exception):
@@ -24,30 +27,33 @@ def compress_video_file(video_file_path, file_identifier, target_size):
     file_name = f'{file_identifier}.mp4'
 
     # folder to save extracted images
-    output_folder_for_compressed_videos = BASE_DIR / "media" / "compressed_folder"
-    out_dir_path = BASE_DIR / output_folder_for_compressed_videos
-    logger.info(f'output_folder_for_compressed_videos {output_folder_for_compressed_videos}')
-    logger.info(f'out_dir_path {out_dir_path}')
-    logger.info(f'video_file_path {video_file_path}')
-    if not out_dir_path.is_dir():
-        out_dir_path.mkdir()
+    # output_folder_for_compressed_videos = BASE_DIR / "media" / "compressed_folder"
+    output_folder_for_compressed_videos = BASE_DIR / PATH_TO_COMPRESSED_VIDEO
+    if not output_folder_for_compressed_videos.is_dir():
+        output_folder_for_compressed_videos.mkdir()
 
     ffmpeg_output_parameters = (
         # "-s " + '854x480 ' + "-crf " + str(target_size)
-        f"-c:v libx264 -preset veryslow -crf {target_size}"
+        f"-c:v libx264 -preset slow -crf {target_size}"
     )
 
     ff = ffmpy.FFmpeg(
         executable='ffmpeg',
         inputs={BASE_DIR / "media" / video_file_path: "-y -hide_banner -nostats"},
-        outputs={out_dir_path / file_name: ffmpeg_output_parameters},
+        outputs={output_folder_for_compressed_videos / file_name: ffmpeg_output_parameters},
     )
     try:
         ff.run()
+        cache.set(file_identifier, FileStatus.READY)
         group_name = get_channel_video_group_name(file_identifier)
-        send_video_ready_msg(group_name, path_to_file=str(out_dir_path / file_name).replace('/code', ''))
+        send_video_ready_msg(group_name,
+                             path_to_file=str(output_folder_for_compressed_videos / file_name).replace('/code', ''))
         logger.info('Video compression is successful')
     except ffmpy.FFRuntimeError as e:
+        group_name = get_channel_video_group_name(file_identifier)
+        cache.set(file_identifier, FileStatus.ERROR)
+        send_error_msg(group_name,
+                             path_to_file=str(output_folder_for_compressed_videos / file_name).replace('/code', ''))
         logger.info('Video compression error')
         logger.error(e, exc_info=True)
         return False

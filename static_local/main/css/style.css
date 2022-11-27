@@ -582,3 +582,33 @@ input.form-control {
     transform: rotate(360deg);
   }
 }
+
+.dropzone {
+    padding: 57px 20px !important;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 32px;
+}
+
+.dropzone:hover {
+    border-color: #ff4d29;;
+}
+
+label {
+    display: block !important;
+}
+
+.form-range {
+    width: 325px !important;
+}
+
+#ratio_hint {
+    margin-bottom: 32px;
+}
+
+.return_to_page {
+    display: block;
+    margin-top: 32px;
+    font-size: 27px;
+    color: var(--brand);
+}
