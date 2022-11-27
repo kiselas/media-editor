@@ -21,10 +21,10 @@ BASE_DIR = settings.BASE_DIR
 
 
 @app.task
-def compress_video_file(video_file_path, file_identifier, target_size):
+def compress_video_file(video_file_path, file_identifier, target_size, file_format):
     logger.info('Start compressing video')
     target_size = get_crf_for_compression(target_size)
-    file_name = f'{file_identifier}.mp4'
+    file_name = f'{file_identifier}.{file_format}'
 
     # folder to save extracted images
     # output_folder_for_compressed_videos = BASE_DIR / "media" / "compressed_folder"

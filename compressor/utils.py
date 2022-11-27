@@ -54,3 +54,12 @@ def mark_ready(file_path):
     logger.info('File marked as ready')
     return new_file_path
 
+
+def get_file_format(file_from_request):
+    try:
+        file_name, file_type = file_from_request.name.split('.')
+        return f'.{file_type}'
+    except ValueError:
+        logger.error("File doesn't have type")
+
+

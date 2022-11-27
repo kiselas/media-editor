@@ -6,13 +6,13 @@ from django.shortcuts import render
 from django.core.files.storage import default_storage
 
 from ws_app.consumers import send_video_ready_msg
-from .constants import PATH_TO_COMPRESSED_VIDEO, FileStatus
+from .constants import PATH_TO_COMPRESSED_VIDEO, FileStatus, AVAILABLE_VIDEO_FORMATS, MAX_VIDEO_SIZE
 from .forms import UploadFileForm
 
 import logging
 
 from .tasks import compress_video_file
-from .utils import check_video_is_ready, get_path_to_file
+from .utils import check_video_is_ready, get_path_to_file, get_file_format
 
 logger = logging.getLogger(__name__)
 
@@ -21,12 +21,20 @@ def compress_video(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            file_identifier = str(uuid.uuid4())
-            file_path = default_storage.save(f'./temp/{file_identifier}.mp4', request.FILES['file'])
-            compression_ratio = form.cleaned_data['compression_ratio']
-            compress_video_file.delay(file_path, file_identifier, compression_ratio)
-            cache.set(file_identifier, FileStatus.IN_PROCESS)
-            return HttpResponseRedirect(file_identifier)
+            file_from_request = request.FILES['file']
+            file_format = get_file_format(file_from_request)
+            if file_format in AVAILABLE_VIDEO_FORMATS and file_from_request.size < MAX_VIDEO_SIZE:
+                file_identifier = str(uuid.uuid4())
+                file_path = default_storage.save(f'./temp/{file_identifier}.{file_format}', file_from_request)
+                target_size = form.cleaned_data['compression_ratio']
+
+                compress_video_file.delay(file_path, file_identifier, target_size, file_format)
+                cache.set(file_identifier, FileStatus.IN_PROCESS)
+                return HttpResponseRedirect(file_identifier)
+            else:
+                logger.error(f'Incorrect size or format of video '
+                             f'(Size: {file_from_request.size}, format: {file_format})')
+                return HttpResponseRedirect('error')
     else:
         form = UploadFileForm()
     return render(request, 'compress_video.html', {'form': form})
