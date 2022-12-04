@@ -36,8 +36,6 @@ services:
     command: daphne django_video_converter.asgi:application --bind 0.0.0.0
     volumes:
       - .:/code
-      - static_volume:/code/static
-      - media_volume:/code/media
     expose:
       - 8000
     depends_on:
@@ -49,8 +47,8 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - static_volume:/code/static
-      - media_volume:/code/media
+      - ./static:/code/static
+      - ./media:/code/media
     ports:
       - "80:80"
       - "443:443"
@@ -62,8 +60,6 @@ services:
     command: celery -A django_celery worker -l info
     volumes:
       - .:/code
-      - static_volume:/code/static
-      - media_volume:/code/media
     environment:
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
@@ -76,5 +72,3 @@ services:
       - web
 volumes:
     postgres_data:
-    static_volume:
-    media_volume:

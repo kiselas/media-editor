@@ -45,7 +45,7 @@
         function check_file_input_size() {
             let size = this.files[0].size; // размер в байтах
             let max_size = 400 * 1024 * 1024; //5мб
-            let allow_file_extensions = ['video/mp4', 'x-msvideo', 'video/mkv', 'video/mov']; // допустимые типы файлов
+            let allow_file_extensions = ['video/mp4', 'video/x-msvideo', 'video/x-matroska', 'video/quicktime']; // допустимые типы файлов
             let file_extension = this.files[0].type.toLowerCase()
             console.log(this.files[0].name.toLowerCase())
             let submit_button = document.getElementById("submit_button")
@@ -60,6 +60,7 @@
             else if (!(allow_file_extensions.includes(file_extension))) {
                 console.log('Неверный тип файла')
                 submit_button.disabled = true;
+                console.log(file_extension)
             }
             else {
                 // активируем кнопку, если размер и расширение файла подходят

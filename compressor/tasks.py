@@ -18,28 +18,27 @@ class InvalidCRFSize(Exception):
 
 logger = logging.getLogger(__name__)
 BASE_DIR = settings.BASE_DIR
+FFMPEG_COMPRESSION_PRESET = 'superfast' # slow, medium, fast, superfast
 
 
 @app.task
 def compress_video_file(video_file_path, file_identifier, target_size, file_format):
-    logger.info('Start compressing video')
+    logger.info(f'Start compressing video with preset {FFMPEG_COMPRESSION_PRESET}')
     target_size = get_crf_for_compression(target_size)
-    file_name = f'{file_identifier}.{file_format}'
+    file_name = f'{file_identifier}{file_format}'
 
-    # folder to save extracted images
-    # output_folder_for_compressed_videos = BASE_DIR / "media" / "compressed_folder"
     output_folder_for_compressed_videos = BASE_DIR / PATH_TO_COMPRESSED_VIDEO
     if not output_folder_for_compressed_videos.is_dir():
         output_folder_for_compressed_videos.mkdir()
 
     ffmpeg_output_parameters = (
         # "-s " + '854x480 ' + "-crf " + str(target_size)
-        f"-c:v libx264 -preset slow -crf {target_size}"
+        f"-c:v libx264 -preset {FFMPEG_COMPRESSION_PRESET} -crf {target_size}"
     )
 
     ff = ffmpy.FFmpeg(
         executable='ffmpeg',
-        inputs={BASE_DIR / "media" / video_file_path: "-y -hide_banner -nostats"},
+        inputs={BASE_DIR / "media" / video_file_path: "-y -hide_banner -nostats -loglevel warning -threads 6"},
         outputs={output_folder_for_compressed_videos / file_name: ffmpeg_output_parameters},
     )
     try:
