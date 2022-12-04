@@ -81,7 +81,7 @@ def send_video_ready_msg(group_name, path_to_file):
     send_to_socket_group(group_name, msg_type, data)
 
 
-def send_error_msg(group_name, path_to_file):
+def send_error_msg(group_name):
     message = 'Error'
     msg_type = 'send_error_message'
     data = {

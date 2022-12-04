@@ -54,6 +54,15 @@
                                 spinner.remove();
                                 waiting_text.remove();
                             }
+                            function prepare_delete_page() {
+                                let spinner = document.getElementsByClassName('lds-roller')[0];
+                                let waiting_text = document.getElementsByClassName('waiting-text')[0];
+                                let video_link = document.getElementById('video-link');
+                                video_link.innerHTML = `<h3 class="video-link">Файл был удалён.</h3>
+                     <a href="{% url 'compress_video' %}" class="return_to_page">Вернуться на страницу сжатия видео</a>`;
+                                spinner.remove();
+                                waiting_text.remove();
+                            }
 
 
 
@@ -80,6 +89,9 @@
                             }
                             else if (fileStatus === ERROR || fileStatus === "None") {
                                     prepare_error_page();
+                            }
+                            else if (fileStatus === DELETED) {
+                                    prepare_delete_page();
                             }
                         </script>
                     </div>
