@@ -32,8 +32,8 @@ services:
   web:
     build: .
 #    command: python manage.py runserver 0.0.0.0:8000
-#    command: gunicorn django_video_converter.wsgi:application --bind 0.0.0.0:8000 --log-level info --capture-output
-    command: daphne django_video_converter.asgi:application --bind 0.0.0.0
+#    command: gunicorn django_media_editor.wsgi:application --bind 0.0.0.0:8000 --log-level info --capture-output
+    command: daphne django_media_editor.asgi:application --bind 0.0.0.0
     volumes:
       - .:/code
     expose:
@@ -43,7 +43,7 @@ services:
       - redis
     environment:
       - REDIS_HOST=redis
-      - DJANGO_SETTINGS_MODULE=django_video_converter.settings
+      - DJANGO_SETTINGS_MODULE=django_media_editor.settings
   nginx:
     build: ./nginx
     volumes:
@@ -65,7 +65,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASSWORD}
-      - DJANGO_SETTINGS_MODULE=django_video_converter.settings
+      - DJANGO_SETTINGS_MODULE=django_media_editor.settings
     depends_on:
       - db
       - redis

@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.core.files.storage import default_storage
 
 from ws_app.consumers import send_video_ready_msg
-from .constants import PATH_TO_COMPRESSED_FILES, FileStatus, AVAILABLE_VIDEO_FORMATS, MAX_VIDEO_SIZE
+from django_media_editor.constants import FULL_PATH_TO_PROCESSED_FILES, FileStatus, AVAILABLE_VIDEO_FORMATS, MAX_VIDEO_SIZE
 from .forms import UploadFileForm
 
 import logging
@@ -44,7 +44,7 @@ def get_compressed_file(request, video_id):
     path_to_file = ""
     file_status = cache.get(video_id)
     if file_status == FileStatus.READY:
-        path_to_file = str(get_path_to_file(video_id, PATH_TO_COMPRESSED_FILES)).replace('/code', '')
+        path_to_file = str(get_path_to_file(video_id, FULL_PATH_TO_PROCESSED_FILES)).replace('/code', '')
     return render(request, 'get_compressed_file.html', {"video_id": video_id,
                                                         "file_status": file_status,
                                                         "path_to_file": path_to_file})

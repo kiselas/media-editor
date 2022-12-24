@@ -5,7 +5,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 from channels.layers import get_channel_layer
 
-from compressor.constants import FileStatus
+from django_media_editor.constants import FileStatus
 from ws_app.utils import send_to_socket_group
 
 logger = logging.getLogger(__name__)

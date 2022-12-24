@@ -1,5 +1,5 @@
 """
-WSGI config for django_video_converter project.
+WSGI config for django_media_editor project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_video_converter.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_media_editor.settings')
 
 application = get_wsgi_application()

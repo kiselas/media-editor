@@ -3,57 +3,76 @@ from pathlib import Path
 import ffmpy
 import logging
 
-from django_video_converter.settings import BASE_DIR
 
 logger = logging.getLogger()
 
 
-def compress_video_file(video_file, target_size):
-    if target_size == 1:
-        target_size = 25 # 20%
-    elif target_size == 2:
-        target_size = 30 # 40%
-    elif target_size == 3:
-        target_size = 35 # 70%
-    elif target_size == 4:
-        target_size = 40 # 80%
-    elif target_size == 5:
-        target_size = 45 # 85%
-    elif target_size == 6:
-        target_size = 50 # 88%
-    else:
-        logger.error('Incorrect target size for video')
-        target_size = 35
+def convert_video_file(video_file_path, file_identifier, file_format, convert_format):
+    logger.info(f'Start converting video from {file_format} to {convert_format}')
+    file_name = f'{file_identifier}{convert_format}'
 
-    # folder to save extracted images
-    output_folder_for_compressed_videos = BASE_DIR / "compressed_folder"
-    out_dir_path = BASE_DIR / output_folder_for_compressed_videos
-    if not out_dir_path.is_dir():
-        out_dir_path.mkdir()
+    FULL_PATH_TO_COMPRESSED_FILES = Path('/home/kisel/Рабочий стол/')
+    if not FULL_PATH_TO_COMPRESSED_FILES.is_dir():
+        FULL_PATH_TO_COMPRESSED_FILES.mkdir()
 
-    ffmpeg_output_parameters = (
-            # "-s " + '854x480 ' + "-crf " + str(target_size)
-            f"-c:v libx264 -preset veryslow -crf {target_size}"
-    )
-    output_file_path = out_dir_path / 'compressed10_processing.mp4'
-    unique_name = output_file_path.name
+    path_to_file = FULL_PATH_TO_COMPRESSED_FILES / file_name
+
+    convert_format_parameters = {
+        '.webm': {
+            '.mp4': '-map 0 -c:v libx264 -c:a aac',
+            '.mkv': '-map 0 -c:v libx264 -c:a aac',
+            '.mov': '-map 0 -c:v libx264 -c:a aac',
+            '.flv': '-map 0 -c:v libx264 -c:a aac',
+        },
+        '.mp4': {
+            '.webm': '-c:v libvpx-vp9',
+            '.flv': '-map 0 -c:v libx264 -c:a aac',
+        },
+        '.mkv': {
+            '.webm': '-c:v libvpx-vp9',
+            '.flv': '-map 0 -c:v libx264 -c:a aac',
+        },
+        '.mov': {
+            '.webm': '-c:v libvpx-vp9',
+            '.flv': '-map 0 -c:v libx264 -c:a aac',
+        },
+        '.flv': {
+            '.mp4': '-c:v libx264 -c:a aac',
+            '.mkv': '-c:v libx264 -c:a aac',
+            '.mov': '-c:v libx264 -c:a aac',
+            '.webm': '-c:v libvpx-vp9'
+        },
+    }
+    ffmpeg_output_parameters = \
+        convert_format_parameters.get(file_format, {}).get(convert_format, '-q 1 -c copy')
+    print(ffmpeg_output_parameters)
+    ffmpeg_input_parameters = "-y -hide_banner -nostats -loglevel warning -threads 6"
+
     ff = ffmpy.FFmpeg(
         executable='ffmpeg',
-        inputs={video_file: ""},
-        outputs={output_file_path: ffmpeg_output_parameters},
+        inputs={video_file_path: ffmpeg_input_parameters},
+        outputs={path_to_file: ffmpeg_output_parameters},
     )
     try:
-        ff.run()
+        ff.run() # сжатие файла
+
+        # cache.set(file_identifier, FileStatus.READY)
+        # group_name = get_channel_video_group_name(file_identifier)
+
+        # ссылка для скачивания не должна включать базовую папку проекта
+        # send_video_ready_msg(group_name,
+        #                      path_to_file=str(path_to_file).replace('/code', ''))
+        # удаляем через 90 секунд
+        # delete_file.apply_async((str(path_to_file), file_identifier), countdown=FILE_LIFETIME)
+
+        print('Video compression is successful')
     except ffmpy.FFRuntimeError as e:
-        logger.error(e, exc_info=True)
-        return None, None
-    output_file_path = mark_ready(output_file_path)
-    return unique_name, output_file_path
+        # group_name = get_channel_video_group_name(file_identifier)
+        # cache.set(file_identifier, FileStatus.ERROR)
+        # send_error_msg(group_name)
+        logger.info('Video compression error', exc_info=True)
+        return False
 
-def mark_ready(file_path):
-    file_name = file_path.name.replace('_processing', '')
-    file_path.rename(Path(file_path.parent, f"{file_name}"))
-    logger.info('File marked as ready')
-    return file_path
+# compress_video_file('/home/kisel/Рабочий стол/тест.mp4', 6)
 
-unique_name, file_path = compress_video_file('/home/kisel/Рабочий стол/тест.mp4', 6)
+convert_video_file('/home/kisel/Рабочий стол/тест.flv', 'test_flv_to_webm', '.flv', '.webm')

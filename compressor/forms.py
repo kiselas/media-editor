@@ -1,6 +1,6 @@
 from django import forms
 
-from compressor.constants import AVAILABLE_VIDEO_FORMATS
+from django_media_editor.constants import AVAILABLE_VIDEO_FORMATS
 
 
 class UploadFileForm(forms.Form):
