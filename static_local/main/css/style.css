@@ -612,3 +612,15 @@ label {
     font-size: 27px;
     color: var(--brand);
 }
+
+.block-disabled {
+    color: #adb5bd !important;
+    pointer-events: none !important;
+    background-color: #dbdbdb !important;
+}
+
+.block-disabled a {
+    color: #adb5bd !important;
+    pointer-events: none !important;
+    background-color: transparent !important;
+}

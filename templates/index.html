@@ -13,20 +13,16 @@
         <div class="container">
             <div class="row text-center justify-content-center gy-4">
                 <div class="col-lg-2 col-sm-6">
-                    <h1 class="display-4">90K+</h1>
+                    <h1 class="display-4">20K+</h1>
                     <p class="mb-0">Сжатых видео</p>
                 </div>
                 <div class="col-lg-2 col-sm-6">
-                    <h1 class="display-4">90K+</h1>
+                    <h1 class="display-4">30K+</h1>
                     <p class="mb-0">Сжатых картинок</p>
                 </div>
                 <div class="col-lg-2 col-sm-6">
                     <h1 class="display-4">190GB</h1>
                     <p class="mb-0">Сэкономленного места</p>
-                </div>
-                <div class="col-lg-2 col-sm-6">
-                    <h1 class="display-4">380K</h1>
-                    <p class="mb-0">Пользователей каждый день</p>
                 </div>
             </div>
         </div>
@@ -39,8 +35,8 @@
                     <div class="intro">
                         <h6>Доступные инструменты</h6>
                         <h1>Что у нас есть?</h1>
-                        <p class="mx-auto">Мы постоянно совершенствуем наш сервис,
-                            добавляем услуги и делаем его удобней</p>
+                        <p class="mx-auto">Сейчас ведется активная работа по добавлению новых инструментов.
+                            Уже скоро станет доступно конвертирование картинок, аудио и документов любого формата.</p>
                     </div>
                 </div>
             </div>
@@ -48,42 +44,43 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="service">
                         <img src="{% static '/img/icon1.png' %}">
-                        <h5><a href="#">Сжать видео</a></h5>
-                        <p>Здесь Вы можете сжать размер видео в несколько раз, выбрать нужный вес или разрешение </p>
+                        <h5><a href="{% url 'compress_video' %}">Сжать видео</a></h5>
+                        <p>Здесь Вы можете уменьшить размер видео в несколько раз. Поддерживаются форматы MP4, AVI, MOV, MKV, VMW</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="service">
                         <img src="{% static '/img/icon2.png' %}">
-                        <h5><a href="#">Сжать изображение</a></h5>
-                        <p>Здесь Вы можете сжать размер картинки. Можно выбрать нужный вес или разрешение </p>
+                        <h5><a href="{% url 'compress_image' %}">Сжать изображение</a></h5>
+                        <p>Здесь Вы можете уменьшить размер картинки. Поддерживаются форматы JPG, JPEG, PNG</p>
+                        <br>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="service">
                         <img src="{% static '/img/icon3.png' %}">
-                        <h5><a href="#">Конвертер видео</a></h5>
-                        <p>Здесь Вы можете поменять формат видео</p>
+                        <h5><a href="{% url 'convert_video' %}">Конвертер видео</a></h5>
+                        <p>Здесь Вы можете поменять формат видео. Поддерживаются форматы MP4, AVI, MOV, MKV, VMW</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                    <div class="service">
+                    <div class="service block-disabled">
                         <img src="{% static '/img/icon4.png' %}">
-                        <h5><a href="#">Конвертер изображений</a></h5>
+                        <h5><a href="#">Конвертер изображений (Скоро будет доступно)</a></h5>
                         <p>Здесь Вы можете поменять формат изображения</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                    <div class="service">
+                    <div class="service block-disabled">
                         <img src="{% static '/img/icon5.png' %}">
-                        <h5><a href="#">Конвертер документов</a></h5>
+                        <h5><a href="#">Конвертер документов (Скоро будет доступно)</a></h5>
                         <p>Здесь Вы можете поменять форматы документов (pdf, docs и т.д)</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                    <div class="service">
+                    <div class="service block-disabled">
                         <img src="{% static '/img/icon6.png' %}">
-                        <h5><a href="#">Конвертер аудио</a></h5>
+                        <h5><a href="#">Конвертер аудио (Скоро будет доступно)</a></h5>
                         <p>Здесь Вы можете менять формат для аудиофайлов</p>
                     </div>
                 </div>

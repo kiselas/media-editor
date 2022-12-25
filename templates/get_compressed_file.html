@@ -16,11 +16,11 @@
                 <div class="col-12">
                     <div class="intro">
                         <h6 class="waiting-text">Ожидайте..</h6>
-                        <h1 id="video-link">Видео обрабатывается. Загрузка начнётся автоматически.</h1>
-                            {{ video_id|json_script:"video_id" }}
+                        <h1 id="video-link">Файл обрабатывается. Загрузка начнётся автоматически.</h1>
+                            {{ file_id|json_script:"file_id" }}
                         <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                         <script>
-                            const roomName = JSON.parse(document.getElementById('video_id').textContent);
+                            const roomName = JSON.parse(document.getElementById('file_id').textContent);
                             const fileStatus = "{{ file_status }}";
                             const IN_PROCESS = "1"
                             const READY = "2"
@@ -40,7 +40,7 @@
                                 let video_link = document.getElementById('video-link');
                                 video_link.innerHTML =
                                     `<a class="video-link" href="${path_to_file}" download>Нажмите для загрузки</a>
-                                    <a href="{% url 'compress_video' %}" class="return_to_page">Сжать другое видео</a>`;
+                                    <a href="/" class="return_to_page">Вернуться на главную страницу</a>`;
                                 spinner.remove();
                                 waiting_text.remove();
                             }
@@ -50,7 +50,7 @@
                                 let waiting_text = document.getElementsByClassName('waiting-text')[0];
                                 let video_link = document.getElementById('video-link');
                                 video_link.innerHTML = `<h3 class="video-link">Произошла ошибка. Попробуйте еще раз.</h3>
-                     <a href="{% url 'compress_video' %}" class="return_to_page">Вернуться на страницу сжатия видео</a>`;
+                     <a href="/" class="return_to_page">Вернуться на главную страницу</a>`;
                                 spinner.remove();
                                 waiting_text.remove();
                             }
@@ -59,7 +59,7 @@
                                 let waiting_text = document.getElementsByClassName('waiting-text')[0];
                                 let video_link = document.getElementById('video-link');
                                 video_link.innerHTML = `<h3 class="video-link">Файл был удалён.</h3>
-                     <a href="{% url 'compress_video' %}" class="return_to_page">Вернуться на страницу сжатия видео</a>`;
+                     <a href="/" class="return_to_page">Вернуться на главную страницу</a>`;
                                 spinner.remove();
                                 waiting_text.remove();
                             }

@@ -3,6 +3,9 @@ from pathlib import Path
 import ffmpy
 import logging
 
+from io import StringIO
+from PIL import Image
+from PIL.Image import Resampling
 
 logger = logging.getLogger()
 
@@ -75,4 +78,21 @@ def convert_video_file(video_file_path, file_identifier, file_format, convert_fo
 
 # compress_video_file('/home/kisel/Рабочий стол/тест.mp4', 6)
 
-convert_video_file('/home/kisel/Рабочий стол/тест.flv', 'test_flv_to_webm', '.flv', '.webm')
+# convert_video_file('/home/kisel/Рабочий стол/тест.flv', 'test_flv_to_webm', '.flv', '.webm')
+
+
+def compress_image(path_to_file, target_size):
+    target_size = target_size/100
+    foo = Image.open(path_to_file)  # My image is a 200x374 jpeg that is 102kb large
+    new_size = (int(foo.size[0] * target_size), int(foo.size[1] * target_size))  # (400 * 0.5, 800 * 0.5)
+    print(new_size)
+
+    # downsize the image with an ANTIALIAS filter (gives the highest quality)
+    foo = foo.resize(new_size, Resampling.LANCZOS)
+
+    foo.save('/home/kisel/Рабочий стол/image_scaled.jpg', quality=95)
+
+    foo.save('/home/kisel/Рабочий стол/image_scaled_opt.jpg', optimize=True, quality=95)
+
+
+compress_image('/home/kisel/Рабочий стол/test_img_4k.jpg', 90)

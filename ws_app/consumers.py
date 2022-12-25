@@ -17,12 +17,12 @@ def get_channel_video_group_name(name):
 
 class NotificationsConsumer(JsonWebsocketConsumer):
     def connect(self):
-        self.video_id = self.scope["url_route"]["kwargs"]["video_id"]
-        self.room_video_id = get_channel_video_group_name(self.video_id)
+        self.file_id = self.scope["url_route"]["kwargs"]["file_id"]
+        self.room_file_id = get_channel_video_group_name(self.file_id)
 
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
-            self.room_video_id, self.channel_name
+            self.room_file_id, self.channel_name
         )
 
         self.accept()
@@ -30,7 +30,7 @@ class NotificationsConsumer(JsonWebsocketConsumer):
     def disconnect(self, close_code):
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
-            self.room_video_id, self.channel_name
+            self.room_file_id, self.channel_name
         )
 
     # Receive message from WebSocket
@@ -40,7 +40,7 @@ class NotificationsConsumer(JsonWebsocketConsumer):
         logger.info('In recieve')
         # Send message to room group
         # async_to_sync(self.channel_layer.group_send)(
-        #     self.room_video_id, {"type": "send_ready_message", "message": message}
+        #     self.room_file_id, {"type": "send_ready_message", "message": message}
         # )
 
     def send_ready_message(self, event):
