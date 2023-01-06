@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_channel_video_group_name(name):
-    return "video_%s" % name
+    return "file_%s" % name
 
 
 class NotificationsConsumer(JsonWebsocketConsumer):

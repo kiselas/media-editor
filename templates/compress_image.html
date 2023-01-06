@@ -45,7 +45,7 @@
         function check_file_input_size() {
             let size = this.files[0].size; // размер в байтах
             let max_size = 100 * 1024 * 1024; //100мб
-            let allow_file_extensions = ['image/jpeg',]; // допустимые типы файлов
+            let allow_file_extensions = ['image/jpeg', 'image/png',]; // допустимые типы файлов
             let file_extension = this.files[0].type.toLowerCase()
             console.log(file_extension)
             console.log(this.files[0].name.toLowerCase())

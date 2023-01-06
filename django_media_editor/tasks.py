@@ -16,10 +16,10 @@ def delete_file(path_to_file, file_identifier):
     try:
         logger.debug(f'Deleting compressed file with path: {path_to_file}')
         compress_file_to_remove.unlink()
-        cache.set(file_identifier, FileStatus.DELETED)
+        cache.set(file_identifier, f'{FileStatus.DELETED},undefined')
     except Exception as e:
         logger.error(f'Error deleting file with path {temp_file_to_remove}', exc_info=True)
-        cache.set(file_identifier, FileStatus.ERROR)
+        cache.set(file_identifier, f'{FileStatus.ERROR},undefined')
 
     try:
         logger.debug(f'Deleting temp file with path: {temp_file_to_remove}')

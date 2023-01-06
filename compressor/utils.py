@@ -38,21 +38,9 @@ def get_crf_for_compression(target_size):
     return target_size
 
 
-def check_video_is_ready(file_identifier: str, path_to_dir) -> bool:
-    output_folder_for_compressed_videos = BASE_DIR / path_to_dir / f'{file_identifier}.mp4'
-    return output_folder_for_compressed_videos.exists()
-
-
-def get_path_to_file(file_identifier: str, path_to_dir) -> str:
-    output_folder_for_compressed_videos = BASE_DIR / path_to_dir / f'{file_identifier}.mp4'
-    return output_folder_for_compressed_videos
-
-
-def mark_ready(file_path):
-    file_name = file_path.name.replace('_processing', '')
-    new_file_path = file_path.rename(Path(file_path.parent, f"{file_name}"))
-    logger.info('File marked as ready')
-    return new_file_path
+def get_path_to_file(file_identifier: str, file_format: str, path_to_dir) -> str:
+    path_to_file = str(BASE_DIR / path_to_dir / f'{file_identifier}{file_format}').replace('/code', '')
+    return path_to_file
 
 
 def get_file_format(file_from_request):

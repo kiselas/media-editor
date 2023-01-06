@@ -13,7 +13,7 @@ from .forms import UploadVideoForm, UploadImageForm
 import logging
 
 from .tasks import compress_video_file, compress_image_file
-from .utils import check_video_is_ready, get_path_to_file, get_file_format
+from .utils import get_path_to_file, get_file_format
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ def compress_video(request):
                 target_size = form.cleaned_data['compression_ratio']
 
                 compress_video_file.delay(file_path, file_identifier, target_size, file_format)
-                cache.set(file_identifier, FileStatus.IN_PROCESS)
+                cache.set(file_identifier, f'{FileStatus.IN_PROCESS},{file_format}')
                 return HttpResponseRedirect(file_identifier)
             else:
                 logger.error(f'Incorrect size or format of video '
@@ -53,7 +53,7 @@ def compress_image(request):
                 target_size = form.cleaned_data['compression_ratio']
 
                 compress_image_file.delay(file_path, file_identifier, target_size, file_format)
-                cache.set(file_identifier, FileStatus.IN_PROCESS)
+                cache.set(file_identifier, f'{FileStatus.IN_PROCESS},{file_format}')
                 return HttpResponseRedirect(f'/compressor/{file_identifier}')
             else:
                 logger.error(f'Incorrect size or format of file '
@@ -66,9 +66,9 @@ def compress_image(request):
 
 def get_compressed_file(request, file_id):
     path_to_file = ""
-    file_status = cache.get(file_id)
+    file_status, file_format = cache.get(file_id).split(',')
     if file_status == FileStatus.READY:
-        path_to_file = str(get_path_to_file(file_id, FULL_PATH_TO_PROCESSED_FILES)).replace('/code', '')
+        path_to_file = get_path_to_file(file_id, file_format, FULL_PATH_TO_PROCESSED_FILES)
     return render(request, 'get_compressed_file.html', {"file_id": file_id,
                                                         "file_status": file_status,
                                                         "path_to_file": path_to_file})

@@ -38,7 +38,7 @@ def convert_video_file(video_file_path, file_identifier, file_format, convert_fo
     try:
         ff.run()
 
-        cache.set(file_identifier, FileStatus.READY)
+        cache.set(file_identifier, f'{FileStatus.READY},{file_format}')
         group_name = get_channel_video_group_name(file_identifier)
 
         # ссылка для скачивания не должна включать базовую папку проекта
@@ -49,7 +49,7 @@ def convert_video_file(video_file_path, file_identifier, file_format, convert_fo
         print('Video convertation is successful')
     except ffmpy.FFRuntimeError as e:
         group_name = get_channel_video_group_name(file_identifier)
-        cache.set(file_identifier, FileStatus.ERROR)
+        cache.set(file_identifier, f'{FileStatus.ERROR},{file_format}')
         send_error_msg(group_name)
         logger.info('Video convertation error', exc_info=True)
         return False
