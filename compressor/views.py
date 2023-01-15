@@ -8,7 +8,7 @@ from django.core.files.storage import default_storage
 from ws_app.consumers import send_video_ready_msg
 from django_media_editor.constants import FULL_PATH_TO_PROCESSED_FILES, FileStatus, \
     AVAILABLE_VIDEO_FORMATS, AVAILABLE_IMAGE_FORMATS, MAX_VIDEO_SIZE, MAX_IMAGE_SIZE
-from .forms import UploadVideoForm, UploadImageForm
+from .forms import CompressVideoForm, UploadImageForm
 
 import logging
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 def compress_video(request):
     if request.method == 'POST':
-        form = UploadVideoForm(request.POST, request.FILES)
+        form = CompressVideoForm(request.POST, request.FILES)
         if form.is_valid():
             file_from_request = request.FILES['file']
             file_format = get_file_format(file_from_request)
@@ -31,13 +31,13 @@ def compress_video(request):
 
                 compress_video_file.delay(file_path, file_identifier, target_size, file_format)
                 cache.set(file_identifier, f'{FileStatus.IN_PROCESS},{file_format}')
-                return HttpResponseRedirect(file_identifier)
+                return HttpResponseRedirect(f'/download/{file_identifier}')
             else:
                 logger.error(f'Incorrect size or format of video '
                              f'(Size: {file_from_request.size}, format: {file_format})')
                 return HttpResponseRedirect('error')
     else:
-        form = UploadVideoForm()
+        form = CompressVideoForm()
     return render(request, 'compress_video.html', {'form': form})
 
 
@@ -54,7 +54,7 @@ def compress_image(request):
 
                 compress_image_file.delay(file_path, file_identifier, target_size, file_format)
                 cache.set(file_identifier, f'{FileStatus.IN_PROCESS},{file_format}')
-                return HttpResponseRedirect(f'/compressor/{file_identifier}')
+                return HttpResponseRedirect(f'/download/{file_identifier}')
             else:
                 logger.error(f'Incorrect size or format of file '
                              f'(Size: {file_from_request.size}, format: {file_format})')
@@ -63,12 +63,3 @@ def compress_image(request):
         form = UploadImageForm()
     return render(request, 'compress_image.html', {'form': form})
 
-
-def get_compressed_file(request, file_id):
-    path_to_file = ""
-    file_status, file_format = cache.get(file_id).split(',')
-    if file_status == FileStatus.READY:
-        path_to_file = get_path_to_file(file_id, file_format, FULL_PATH_TO_PROCESSED_FILES)
-    return render(request, 'get_compressed_file.html', {"file_id": file_id,
-                                                        "file_status": file_status,
-                                                        "path_to_file": path_to_file})

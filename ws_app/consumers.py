@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
@@ -73,6 +74,7 @@ class NotificationsConsumer(JsonWebsocketConsumer):
 def send_video_ready_msg(group_name, path_to_file):
     message = 'Video is ready'
     msg_type = 'send_ready_message'
+    time.sleep(4)
     data = {
         'message': message,
         'path_to_file': path_to_file,

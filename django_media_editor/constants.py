@@ -21,6 +21,15 @@ class FileStatus:
     ERROR = "4"
 
 
+VIDEO_CONVERTER_CHOICES = (
+    (".avi", ".avi"),
+    (".mkv", ".mkv"),
+    (".mov", ".mov"),
+    (".mkv", ".mkv"),
+    (".mp4", ".mp4"),
+)
+
+
 CONVERT_FORMAT_PARAMETERS = {
         '.webm': {
             '.mp4': '-map 0 -c:v libx264 -c:a aac',

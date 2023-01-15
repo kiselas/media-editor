@@ -42,6 +42,13 @@
 
     <!-- blog -->
     <script>
+
+        Dropzone.options = {
+            preview_image: false,
+            inputLabelWithFiles: false,
+            dictDefaultMessage: 'Upload your files here',
+        }
+
         function check_file_input_size() {
             let size = this.files[0].size; // размер в байтах
             let max_size = 100 * 1024 * 1024; //100мб

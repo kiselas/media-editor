@@ -32,16 +32,17 @@ def convert_video_file(video_file_path, file_identifier, file_format, convert_fo
 
     ff = ffmpy.FFmpeg(
         executable='ffmpeg',
-        inputs={video_file_path: ffmpeg_input_parameters},
+        inputs={BASE_DIR / "media" / video_file_path: ffmpeg_input_parameters},
         outputs={path_to_file: ffmpeg_output_parameters},
     )
     try:
         ff.run()
-
-        cache.set(file_identifier, f'{FileStatus.READY},{file_format}')
+        logger.info(f'Set cache for {file_identifier} to {FileStatus.READY},{convert_format}')
+        cache.set(file_identifier, f'{FileStatus.READY},{convert_format}')
         group_name = get_channel_video_group_name(file_identifier)
 
         # ссылка для скачивания не должна включать базовую папку проекта
+        logger.info('Try to send ws message')
         send_video_ready_msg(group_name,
                              path_to_file=str(path_to_file).replace('/code', ''))
         delete_file.apply_async((str(path_to_file), file_identifier), countdown=FILE_LIFETIME)
@@ -49,7 +50,7 @@ def convert_video_file(video_file_path, file_identifier, file_format, convert_fo
         print('Video convertation is successful')
     except ffmpy.FFRuntimeError as e:
         group_name = get_channel_video_group_name(file_identifier)
-        cache.set(file_identifier, f'{FileStatus.ERROR},{file_format}')
+        cache.set(file_identifier, f'{FileStatus.ERROR},{convert_format}')
         send_error_msg(group_name)
         logger.info('Video convertation error', exc_info=True)
         return False

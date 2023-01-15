@@ -624,3 +624,11 @@ label {
     pointer-events: none !important;
     background-color: transparent !important;
 }
+
+.converter-choices {
+    width: 346px;
+    margin: 0 auto;
+    height: 40px;
+    text-align: center;
+    font-size: 23px;
+}
