@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 @app.task
 def delete_file(path_to_file, file_identifier):
     compress_file_to_remove = pathlib.Path(path_to_file)
-    temp_file_to_remove = pathlib.Path(path_to_file.replace('/compressed_folder/', '/temp/'))
+    temp_file_to_remove = pathlib.Path(path_to_file.replace('/processed_files/', '/temp/'))
     try:
         logger.debug(f'Deleting compressed file with path: {path_to_file}')
         compress_file_to_remove.unlink()
