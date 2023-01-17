@@ -23,3 +23,6 @@ def get_compressed_file(request, file_id):
     return render(request, 'get_compressed_file.html', {"file_id": file_id,
                                                         "file_status": file_status,
                                                         "path_to_file": path_to_file})
+
+def get_sitemap(request, **kwargs):
+    return render(request, 'sitemap.xml')
