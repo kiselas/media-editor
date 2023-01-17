@@ -31,3 +31,10 @@ def get_sitemap(request, **kwargs):
     response = HttpResponse(t.render(), content_type="application/xml")
     response['Content-Disposition'] = 'attachment; filename=sitemap.xml'
     return response
+
+
+def get_robots(request, **kwargs):
+    t = loader.get_template('robots.txt')
+    response = HttpResponse(t.render(), content_type="text/plain")
+    response['Content-Disposition'] = 'attachment; filename=robots.txt'
+    return response
