@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%  block content %}
+    <!-- SLIDER -->
+
+
+    <!-- ABOUT -->
+
+
+    <!-- MILESTONE -->
+
+    <section id="services" class="text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="intro">
+                        <h1>Конвертация видео в gif</h1>
+                        <p class="mx-auto">Загрузите видео размером до <b>400</b> мегабайт <br>
+                        Максимальная длительность выбранного фрагмента для преобразования в GIF - 10 секунд
+                        </p>
+                        <div id="alerts_block"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4">
+                <form action="" enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <div>
+                        {{ form }}
+                        <div id="ratio_hint"></div>
+                    </div>
+                    <input type="submit" value="Начать конвертацию видео" id="submit_button" class="btn btn-brand ms-lg-3" disabled>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio -->
+
+    <!-- Team -->
+
+    <!-- Reviews -->
+
+    <!-- blog -->
+    <script>
+        function check_file_input_size() {
+            let size = this.files[0].size; // размер в байтах
+            let max_size = 400 * 1024 * 1024; //400 мб
+            let allow_file_extensions = ['video/mp4', 'video/x-msvideo', 'video/x-matroska', 'video/quicktime']; // допустимые типы файлов
+            let file_extension = this.files[0].type.toLowerCase()
+            console.log(this.files[0].name.toLowerCase())
+            let submit_button = document.getElementById("submit_button")
+            if(max_size < size){
+                let alerts_block = document.getElementById("alerts_block")
+                alerts_block.innerHTML = `<div class="alert alert-danger" role="alert">
+                                              Слишком большой размер файла.
+                                           </div>`
+                this.value = ''
+                submit_button.disabled = true;
+            }
+            else if (!(allow_file_extensions.includes(file_extension))) {
+                console.log('Неверный тип файла')
+                submit_button.disabled = true;
+                console.log(file_extension)
+            }
+            else {
+                // активируем кнопку, если размер и расширение файла подходят
+
+                submit_button.disabled = false;
+            }
+        }
+
+        let compression_ratio_slider = document.getElementById("id_compression_ratio")
+        
+
+        let file_input_field = document.getElementById("id_file")
+        file_input_field.addEventListener('change', check_file_input_size);
+
+    </script>
+
+{%  endblock content %}
+
+

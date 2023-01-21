@@ -28,14 +28,14 @@ def compress_video(request):
                 file_identifier = str(uuid.uuid4())
                 file_path = default_storage.save(f'./temp/{file_identifier}{file_format}', file_from_request)
                 target_size = form.cleaned_data['compression_ratio']
+                cache.set(file_identifier, f'{FileStatus.IN_PROCESS},{file_format}')
 
                 compress_video_file.delay(file_path, file_identifier, target_size, file_format)
-                cache.set(file_identifier, f'{FileStatus.IN_PROCESS},{file_format}')
                 return HttpResponseRedirect(f'/download/{file_identifier}')
             else:
                 logger.error(f'Incorrect size or format of video '
                              f'(Size: {file_from_request.size}, format: {file_format})')
-                return HttpResponseRedirect('error')
+                return HttpResponseRedirect('/download/error')
     else:
         form = CompressVideoForm()
     return render(request, 'compress_video.html', {'form': form})
@@ -51,14 +51,14 @@ def compress_image(request):
                 file_identifier = str(uuid.uuid4())
                 file_path = default_storage.save(f'./temp/{file_identifier}{file_format}', file_from_request)
                 target_size = form.cleaned_data['compression_ratio']
+                cache.set(file_identifier, f'{FileStatus.IN_PROCESS},{file_format}')
 
                 compress_image_file.delay(file_path, file_identifier, target_size, file_format)
-                cache.set(file_identifier, f'{FileStatus.IN_PROCESS},{file_format}')
                 return HttpResponseRedirect(f'/download/{file_identifier}')
             else:
                 logger.error(f'Incorrect size or format of file '
                              f'(Size: {file_from_request.size}, format: {file_format})')
-                return HttpResponseRedirect('error')
+                return HttpResponseRedirect('/download/error')
     else:
         form = UploadImageForm()
     return render(request, 'compress_image.html', {'form': form})

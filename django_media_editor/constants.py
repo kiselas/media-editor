@@ -5,13 +5,21 @@ from django_media_editor.settings import BASE_DIR
 PATH_TO_PROCESSED_FILES = "media/processed_files/"
 FULL_PATH_TO_PROCESSED_FILES: Path = BASE_DIR / PATH_TO_PROCESSED_FILES
 AVAILABLE_VIDEO_FORMATS = ['.avi', '.mkv', '.mov', '.mkv', '.mp4']
-AVAILABLE_IMAGE_FORMATS = ['.jpg', '.png', '.jpeg', 'webp']
+AVAILABLE_IMAGE_FORMATS = ['.jpg', '.png', '.jpeg', '.webp']
+VIDEO_QUANTIZE_CHOICES = (
+    (0, "Median"),
+    (1, "Maximum coverage"),
+    (2, "Fast octree"),
+)
+AVAILABLE_QUANTIZE_ALGORITHMS = [0, 1, 2]
 
 MAX_VIDEO_SIZE = 400 * 1024 * 1024 # 400 мегабайт
+MAX_VIDEO_TO_GIF_SIZE = 100 * 1024 * 1024 # 400 мегабайт
 MAX_IMAGE_SIZE = 100 * 1024 * 1024 # 100 мегабайт
 
 FFMPEG_COMPRESSION_PRESET = 'superfast'  # slow, medium, fast, superfast
 FILE_LIFETIME = 60 * 15  # время жизни файла 15 минут
+MAX_VIDEO_TO_GIF_DURATION = 10
 
 
 class FileStatus:

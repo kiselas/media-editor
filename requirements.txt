@@ -14,3 +14,5 @@ channels==3.*
 daphne==3.*
 channels_redis==3.4.1
 Pillow==9.3.*
+imageio[ffmpeg]==2.22.2
+pygifsicle==1.0.7
