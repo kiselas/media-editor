@@ -5,4 +5,4 @@ COPY ./media-editor.crt /etc/ssl/
 COPY ./media-editor.key /etc/ssl/
 
 COPY . /etc/nginx/
-COPY ./nginx-prod.conf /etc/nginx/nginx.conf
+COPY ./nginx/nginx-prod.conf /etc/nginx/nginx.conf
