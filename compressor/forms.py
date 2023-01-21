@@ -1,6 +1,7 @@
 from django import forms
 
-from django_media_editor.constants import AVAILABLE_VIDEO_FORMATS, AVAILABLE_IMAGE_FORMATS, VIDEO_CONVERTER_CHOICES
+from django_media_editor.constants import AVAILABLE_VIDEO_FORMATS, AVAILABLE_IMAGE_FORMATS, VIDEO_CONVERTER_CHOICES, \
+    IMAGE_CONVERTER_CHOICES
 
 
 class ConvertVideoForm(forms.Form):
@@ -8,6 +9,15 @@ class ConvertVideoForm(forms.Form):
                                                          'accept': ','.join(AVAILABLE_VIDEO_FORMATS)}),
                            label=False)
     convert_format = forms.ChoiceField(choices=VIDEO_CONVERTER_CHOICES,
+                                          widget=forms.Select(attrs={'class': 'converter-choices'}),
+                                          label='Выберите формат для конвертации')
+
+
+class ConvertImageForm(forms.Form):
+    file = forms.FileField(widget=forms.FileInput(attrs={'class': 'dropzone',
+                                                         'accept': ','.join(AVAILABLE_IMAGE_FORMATS)}),
+                           label=False)
+    convert_format = forms.ChoiceField(choices=IMAGE_CONVERTER_CHOICES,
                                           widget=forms.Select(attrs={'class': 'converter-choices'}),
                                           label='Выберите формат для конвертации')
 

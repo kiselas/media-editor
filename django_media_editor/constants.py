@@ -5,7 +5,7 @@ from django_media_editor.settings import BASE_DIR
 PATH_TO_PROCESSED_FILES = "media/processed_files/"
 FULL_PATH_TO_PROCESSED_FILES: Path = BASE_DIR / PATH_TO_PROCESSED_FILES
 AVAILABLE_VIDEO_FORMATS = ['.avi', '.mkv', '.mov', '.mkv', '.mp4']
-AVAILABLE_IMAGE_FORMATS = ['.jpg', '.png', '.jpeg', ]
+AVAILABLE_IMAGE_FORMATS = ['.jpg', '.png', '.jpeg', 'webp']
 
 MAX_VIDEO_SIZE = 400 * 1024 * 1024 # 400 мегабайт
 MAX_IMAGE_SIZE = 100 * 1024 * 1024 # 100 мегабайт
@@ -27,6 +27,12 @@ VIDEO_CONVERTER_CHOICES = (
     (".mov", ".mov"),
     (".mkv", ".mkv"),
     (".mp4", ".mp4"),
+)
+
+IMAGE_CONVERTER_CHOICES = (
+    (".jpg", ".jpg"),
+    (".png", ".png"),
+    (".webp", ".webp"),
 )
 
 

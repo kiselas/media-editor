@@ -14,15 +14,6 @@ services:
     ports:
       - 54321:5432
 
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    ports:
-      - 5050:80
-    environment:
-      PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-
   redis:
     image: redis:alpine
     container_name : redis
@@ -45,7 +36,9 @@ services:
       - REDIS_HOST=redis
       - DJANGO_SETTINGS_MODULE=django_media_editor.settings
   nginx:
-    build: ./nginx
+    build:
+      dockerfile: ${NGINXDOCKERFILE:-./nginx/Dockerfile-prod}
+      context: ./
     volumes:
       - ./static:/code/static
       - ./media:/code/media
