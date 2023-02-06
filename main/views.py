@@ -8,7 +8,12 @@ from django_media_editor.constants import FileStatus, FULL_PATH_TO_PROCESSED_FIL
 
 
 def index(request):
-    context = {'latest_question_list': 'hello'}
+    context = {'title': 'Media-editor - сжать фото и видео онлайн',
+               'description':
+                   '''Это онлайн-сервис для сжатия и конвертации фото (PNG. JPEG) и видео (MP4, AVI, MKV, MOV) файлов.
+                        Вы можете выбрать степень сжатия фото и видео, а так же поменять формат файла.
+                        Бесплатный и быстрый инструмент поможет вам уменьшить размер файлов всего в пару кликов.''',
+               'keywords': 'Сжатие, фото, видео, gif, изменение размера, изменение формата, конвертировать'}
     return render(request, 'index.html', context)
 
 
@@ -23,7 +28,10 @@ def get_compressed_file(request, file_id):
 
     return render(request, 'get_compressed_file.html', {"file_id": file_id,
                                                         "file_status": file_status,
-                                                        "path_to_file": path_to_file})
+                                                        "path_to_file": path_to_file,
+                                                        "title": "Файл обрабатывается, ожидайте",
+                                                        "description": "",
+                                                        "keywords": ""})
 
 
 def get_sitemap(request, **kwargs):

@@ -16,6 +16,13 @@ logger = logging.getLogger(__name__)
 
 
 def convert_video(request):
+    context = {
+        "title": "Конвертировать видео MP4, AVI, MOV, MKV, VMW в другой формат."
+                 "Онлайн-инструмент для конвертации видео любого типа | Media-Editor",
+        "description":
+            """Конвертируйте видео в MP4, AVI, MOV, MKV, VMW онлайн бесплатно, поменяйте формат видео онлайн, 
+                                       бесплатно сменить формат у видео.""",
+        "keywords": 'Конвертация, видео, avi в mp4, изменение формата'}
     if request.method == 'POST':
         form = ConvertVideoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -36,10 +43,18 @@ def convert_video(request):
                 return HttpResponseRedirect('/download/error')
     else:
         form = ConvertVideoForm()
-    return render(request, 'convert_video.html', {'form': form})
+    context['form'] = form
+    return render(request, 'convert_video.html', context)
 
 
 def convert_image(request):
+    context = {
+        "title": "Конвертировать фото JPG, JPEG, PNG, WEBP в другой формат."
+                 "Онлайн-инструмент для конвертации картинок любого типа | Media-Editor",
+        "description":
+            """Конвертируйте картинки в JPG, JPEG, PNG, WEBP онлайн бесплатно, поменяйте формат изображения онлайн, 
+                                       бесплатно сменить формат у фото.""",
+        "keywords": 'Конвертация, фото, картинки, изображения, изменение формата, jpg в png'}
     if request.method == 'POST':
         form = ConvertImageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -61,10 +76,15 @@ def convert_image(request):
                 return HttpResponseRedirect('/download/error')
     else:
         form = ConvertImageForm()
-    return render(request, 'convert_image.html', {'form': form})
+    context['form'] = form
+    return render(request, 'convert_image.html', context)
 
 
 def convert_video_to_gif_view(request):
+    context = {
+        "title": "Конвертируйте видео в GIF. Онлайн-инструмент для конвертации видео в гиф | Media-Editor",
+        "description": """Сделайте GIF-анимацию из видео онлайн бесплатно, конвертируйте видеофайл в gif.""",
+        "keywords": 'Конвертация, видео в gif, video to gif'}
     if request.method == 'POST':
         form = ConvertVideoToGifForm(request.POST, request.FILES)
         if form.is_valid():
@@ -87,4 +107,5 @@ def convert_video_to_gif_view(request):
                 return HttpResponseRedirect('/download/error')
     else:
         form = ConvertVideoToGifForm()
-    return render(request, 'convert_video_to_gif.html', {'form': form})
+    context['form'] = form
+    return render(request, 'convert_video_to_gif.html', context)

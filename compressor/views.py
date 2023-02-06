@@ -19,6 +19,11 @@ logger = logging.getLogger(__name__)
 
 
 def compress_video(request):
+    context = {"title": "Сжимайте видео MP4, AVI, MOV, MKV, VMW без потери качества. "
+                        "Онлайн-инструмент для сжатия видео всех форматов | Media-Editor",
+               "description": """Сжимайте видео MP4, AVI, MOV, MKV, VMW онлайн бесплатно, уменьшайте размер видео онлайн, 
+                               бесплатный компрессор видео.""",
+               "keywords": 'Сжатие, видео, изменение размера, компрессия'}
     if request.method == 'POST':
         form = CompressVideoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -38,10 +43,18 @@ def compress_video(request):
                 return HttpResponseRedirect('/download/error')
     else:
         form = CompressVideoForm()
-    return render(request, 'compress_video.html', {'form': form})
+    context['form'] = form
+    return render(request, 'compress_video.html', context)
 
 
 def compress_image(request):
+    context = {
+        "title": "Сжимайте фото JPG, JPEG, PNG, WEBP без потери качества. "
+                 "Онлайн-инструмент для сжатия картинок всех форматов | Media-Editor",
+        "description": """Сжимайте картинки JPG, JPEG, PNG, WEBP онлайн бесплатно, уменьшайте размер изображения онлайн, 
+                                   бесплатный компрессор фото.""",
+        "keywords": 'Сжатие, фото, картинки, изображения, изменение размера, компрессия'}
+
     if request.method == 'POST':
         form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -61,5 +74,6 @@ def compress_image(request):
                 return HttpResponseRedirect('/download/error')
     else:
         form = UploadImageForm()
-    return render(request, 'compress_image.html', {'form': form})
+    context['form'] = form
+    return render(request, 'compress_image.html', context)
 
