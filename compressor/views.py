@@ -31,7 +31,9 @@ def compress_video(request):
                            'сжать видео онлайн бесплатно, '
                            'сжать видео для ватсап, '
                            'сжать большое видео онлайн, '
-                           'сжать видео для почты'}
+                           'сжать видео для почты',
+               "display_metric": True,
+               }
     if request.method == 'POST':
         form = CompressVideoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -44,7 +46,7 @@ def compress_video(request):
                 cache.set(file_identifier, f'{FileStatus.IN_PROCESS},{file_format}')
 
                 compress_video_file.delay(file_path, file_identifier, target_size, file_format)
-                return HttpResponseRedirect(f'/download/{file_identifier}')
+                return HttpResponseRedirect(f'/download/{file_identifier}',)
             else:
                 logger.error(f'Incorrect size or format of video '
                              f'(Size: {file_from_request.size}, format: {file_format})')
@@ -72,7 +74,9 @@ def compress_image(request):
                     сжать картинку jpg онлайн, 
                     сжать файл картинку, 
                     сжать картинку пнг, 
-                    уменьшить размер картинки онлайн"""}
+                    уменьшить размер картинки онлайн""",
+        "display_metric": True,
+    }
 
     if request.method == 'POST':
         form = UploadImageForm(request.POST, request.FILES)

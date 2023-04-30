@@ -8,9 +8,9 @@ from django.shortcuts import render
 
 from compressor.forms import ConvertVideoForm, ConvertImageForm, ConvertVideoToGifForm
 from converter.tasks import convert_video_file, convert_image_file, convert_video_to_gif
-from compressor.utils import get_file_format, get_path_to_file
+from compressor.utils import get_file_format
 from django_media_editor.constants import AVAILABLE_VIDEO_FORMATS, FileStatus, MAX_VIDEO_SIZE, \
-    FULL_PATH_TO_PROCESSED_FILES, AVAILABLE_IMAGE_FORMATS, MAX_IMAGE_SIZE
+    AVAILABLE_IMAGE_FORMATS, MAX_IMAGE_SIZE
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,9 @@ def convert_video(request):
                     'конвертировать видео +в mp4 онлайн, '
                     'изменять видео формат, '
                     'изменить формат видео онлайн, '
-                    'изменить формат видео онлайн +в mp4'}
+                    'изменить формат видео онлайн +в mp4',
+        "display_metric": True,
+    }
     if request.method == 'POST':
         form = ConvertVideoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -68,7 +70,9 @@ def convert_image(request):
                     'конвертировать картинку онлайн, '
                     'конвертировать картинку онлайн бесплатно, '
                     'конвертировать картинку в jpg онлайн, '
-                    'конвертировать картинку в jpg,'}
+                    'конвертировать картинку в jpg,',
+        "display_metric": True,
+    }
     if request.method == 'POST':
         form = ConvertImageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -104,7 +108,9 @@ def convert_video_to_gif_view(request):
                     'сделать gif онлайн из видео, '
                     'видео в gif онлайн, '
                     'конвертировать видео в gif,'
-                    'перевести gif в видео'}
+                    'перевести gif в видео',
+        "display_metric": True,
+    }
     if request.method == 'POST':
         form = ConvertVideoToGifForm(request.POST, request.FILES)
         if form.is_valid():
