@@ -3,6 +3,7 @@ FROM nginx:1.21-alpine
 RUN rm /etc/nginx/conf.d/default.conf
 COPY ./nginx/media-editor.crt /etc/ssl/
 COPY ./nginx/media-editor.key /etc/ssl/
+COPY ./templates/robots.txt /media-editor/robots.txt
 
 COPY ./nginx/ /etc/nginx/
 COPY ./nginx/nginx-prod.conf /etc/nginx/nginx.conf
