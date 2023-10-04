@@ -1,21 +1,22 @@
-from django_media_editor.constants import MAX_VIDEO_TO_GIF_DURATION, AVAILABLE_QUANTIZE_ALGORITHMS
 from PIL import Image, ImageSequence
+
+from django_media_editor.constants import AVAILABLE_QUANTIZE_ALGORITHMS, MAX_VIDEO_TO_GIF_DURATION
 
 
 def validate_video_to_gif_data(start_time, file_duration, end_time, quantize_algorithm):
     duration = end_time - start_time
     if duration > MAX_VIDEO_TO_GIF_DURATION:
-        raise AttributeError('Duration cant be bigger than MAX_VIDEO_TO_GIF_DURATION')
+        raise AttributeError("Duration cant be bigger than MAX_VIDEO_TO_GIF_DURATION")
     if file_duration < end_time:
-        raise AttributeError(f'End time ({end_time}) cant be bigger than video duration ({file_duration})')
+        raise AttributeError(f"End time ({end_time}) cant be bigger than video duration ({file_duration})")
     if start_time < 0:
-        raise AttributeError(f'Variable start ({start_time}) cant be less than 0')
+        raise AttributeError(f"Variable start ({start_time}) cant be less than 0")
     if start_time > file_duration:
-        raise AttributeError(f'Start cant ({start_time}) be bigger than video duration ({file_duration})')
+        raise AttributeError(f"Start cant ({start_time}) be bigger than video duration ({file_duration})")
     if start_time >= end_time:
-        raise AttributeError(f'Start time ({start_time}) cant be bigger than end time ({end_time})')
+        raise AttributeError(f"Start time ({start_time}) cant be bigger than end time ({end_time})")
     if quantize_algorithm not in AVAILABLE_QUANTIZE_ALGORITHMS:
-        raise AttributeError('Unkown quantize algorithm')
+        raise AttributeError("Unkown quantize algorithm")
 
 
 def compress_gif(image_path):
